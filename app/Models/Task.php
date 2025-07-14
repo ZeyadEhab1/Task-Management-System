@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\TaskStatus;
+use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +16,7 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'status' => TaskStatus::class,
+        'status' => TaskStatusEnum::class,
     ];
 
     public function user(): BelongsTo

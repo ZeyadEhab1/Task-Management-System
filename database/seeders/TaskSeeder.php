@@ -7,7 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Task;
 use App\Models\User;
-use App\Enums\TaskStatus;
+use App\Enums\TaskStatusEnum;
 
 class TaskSeeder extends Seeder
 {
@@ -18,7 +18,7 @@ class TaskSeeder extends Seeder
         $task1 = Task::create([
             'title'       => 'Parent Task 1',
             'description' => 'This is the root task for others.',
-            'status'      => TaskStatus::Pending,
+            'status'      => TaskStatusEnum::Pending,
             'user_id'     => $user?->id,
             'due_date'    => now()->addDays(7),
         ]);
@@ -26,7 +26,7 @@ class TaskSeeder extends Seeder
         $task2 = Task::create([
             'title'       => 'Dependent Task 2',
             'description' => 'Depends on Task 1',
-            'status'      => TaskStatus::Pending,
+            'status'      => TaskStatusEnum::Pending,
             'parent_id'   => $task1->id,
             'user_id'     => $user?->id,
             'due_date'    => now()->addDays(3),
@@ -35,7 +35,7 @@ class TaskSeeder extends Seeder
         $task3 = Task::create([
             'title'       => 'Dependent Task 3',
             'description' => 'Depends on Task 1',
-            'status'      => TaskStatus::Pending,
+            'status'      => TaskStatusEnum::Pending,
             'parent_id'   => $task1->id,
             'user_id'     => $user?->id,
             'due_date'    => now()->addDays(4),
@@ -44,7 +44,7 @@ class TaskSeeder extends Seeder
         $task4 = Task::create([
             'title'       => 'Dependent Task 4',
             'description' => 'Depends on Task 1',
-            'status'      => TaskStatus::Pending,
+            'status'      => TaskStatusEnum::Pending,
             'parent_id'   => $task1->id,
             'user_id'     => $user?->id,
             'due_date'    => now()->addDays(5),
@@ -53,7 +53,7 @@ class TaskSeeder extends Seeder
         $task5 = Task::create([
             'title'       => 'Independent Task 5',
             'description' => 'Stands alone.',
-            'status'      => TaskStatus::Pending,
+            'status'      => TaskStatusEnum::Pending,
             'user_id'     => $user?->id,
             'due_date'    => now()->addDays(6),
         ]);
