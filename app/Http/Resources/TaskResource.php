@@ -16,9 +16,12 @@ class TaskResource extends JsonResource
             'description'   => $this->description,
             'status'        => $this->status->value,
             'due_date'      => $this->due_date?->toDateString(),
-            'parent_id'     => $this->parent_id,
+            'parent_id'     => $this->when(!is_null($this->parent_id), $this->parent_id),
             'assigned_user' => new UserResource($this->whenLoaded('user')),
-            'subtasks'      => TaskResource::collection($this->whenLoaded('children')),
+            'subtasks'      => $this->when(
+                $this->children && $this->children->isNotEmpty(),
+                TaskResource::collection($this->children)
+            ),
         ];
     }
 }

@@ -6,6 +6,7 @@ use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
@@ -16,7 +17,9 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'status' => TaskStatusEnum::class,
+        'status'   => TaskStatusEnum::class,
+        'due_date' => 'datetime',
+
     ];
 
     public function user(): BelongsTo
@@ -29,8 +32,14 @@ class Task extends Model
         return $this->belongsTo(Task::class, 'parent_id');
     }
 
-    public function children()
+    public function children(): HasMany
     {
         return $this->hasMany(Task::class, 'parent_id');
+    }
+
+    public function canBeMarkedCompleted(): bool
+    {
+        return !$this->children()->where('status', '!=', TaskStatusEnum::Completed->value)->exists();
+
     }
 }
