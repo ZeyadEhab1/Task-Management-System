@@ -8,16 +8,29 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = Task::query()
+            ->onlyParents()
+            ->with(['user', 'children']);
+
+        if (!auth()->user()->hasRole('manager')) {
+            $query->forUser(auth()->id());
+        } else {
+            $query->filterByUser($request->user_id);
+        }
+
+        $tasks = $query
+            ->filterByStatus($request->status)
+            ->filterByDateRange($request->start_date, $request->end_date)
+            ->get();
+
+        return TaskResource::collection($tasks);
     }
 
 
@@ -39,12 +52,20 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Task $task)
+
+    public function show(Task $task): TaskResource|JsonResponse
     {
-        //
+        $user = Auth::user();
+
+        if (
+            $user->hasRole('manager') ||
+            $task->user_id === $user->id
+        ) {
+            $task->load(['user', 'children']);
+            return new TaskResource($task);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 
 
@@ -54,13 +75,11 @@ class TaskController extends Controller
 
         if ($user->hasRole('manager')) {
             $task->update($request->validated());
-        }
-        elseif ($user->id === $task->user_id) {
+        } elseif ($user->id === $task->user_id) {
             $task->update([
                 'status' => $request->status,
             ]);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         $task->load(['user', 'children']);

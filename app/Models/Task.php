@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\TaskBuilder;
 use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,11 @@ class Task extends Model
         'due_date' => 'datetime',
 
     ];
+
+    public function newEloquentBuilder($query): TaskBuilder
+    {
+        return new TaskBuilder($query);
+    }
 
     public function user(): BelongsTo
     {
