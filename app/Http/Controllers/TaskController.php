@@ -9,11 +9,12 @@ use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $query = Task::query()
             ->onlyParents()
@@ -34,7 +35,7 @@ class TaskController extends Controller
     }
 
 
-    public function store(StoreTaskRequest $request): TaskResource
+    public function store(StoreTaskRequest $request): TaskResource|JsonResponse
     {
         if (!Auth::user()->hasRole('manager')) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -87,11 +88,14 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Task $task)
+    public function destroy(Task $task): JsonResponse
     {
-        //
+        if (!Auth::user()->hasRole('manager')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $task->delete();
+
+        return response()->json(['message' => 'Task deleted successfully.']);
     }
 }

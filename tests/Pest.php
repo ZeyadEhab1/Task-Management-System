@@ -1,28 +1,27 @@
 <?php
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
 |--------------------------------------------------------------------------
 |
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
+| Here we bind Pest to Laravel's base TestCase class. This enables access
+| to Laravel-specific helpers like actingAs, get, postJson, etc.
 |
 */
 
-pest()->extend(Tests\TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+uses(TestCase::class)->in('Feature', 'Unit'); // ✅ This makes all your Feature & Unit tests use Laravel's TestCase
+uses(RefreshDatabase::class)->in('Feature');  // ✅ Optional: resets DB after each test (if using DB)
 
 /*
 |--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
 |
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
+| You can define custom expectations here using Pest's fluent API.
 |
 */
 
@@ -35,9 +34,7 @@ expect()->extend('toBeOne', function () {
 | Functions
 |--------------------------------------------------------------------------
 |
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
+| Define any global helper functions you'd like to use across your tests.
 |
 */
 
