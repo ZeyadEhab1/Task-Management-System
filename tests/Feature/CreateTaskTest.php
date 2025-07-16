@@ -50,10 +50,12 @@ it('allows manager to create a task', function () {
 
 it('prevents non-manager user from creating a task', function () {
     $response = actingAs($this->user)->postJson($this->baseUrl, $this->taskData);
+
     $response->assertForbidden()
-        ->assertJson(['message' => 'Unauthorized']);
+        ->assertJson(['message' => 'This action is unauthorized.']);
 
     $this->assertDatabaseMissing('tasks', [
         'title' => 'Test Task',
     ]);
 });
+

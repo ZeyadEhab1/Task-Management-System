@@ -14,9 +14,9 @@ beforeEach(function () {
 
 it('allows user to register successfully', function () {
     $userData = [
-        'name' => 'Zeyad',
-        'email' => 'zeyad@example.com',
-        'password' => 'password123',
+        'name'                  => 'Zeyad',
+        'email'                 => 'zeyad@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ];
 

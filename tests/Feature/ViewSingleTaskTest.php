@@ -59,7 +59,6 @@ it('prevents users from viewing tasks not assigned to them', function () {
     $response = actingAs($this->user)->getJson("{$this->baseUrl}/{$this->otherUserTask->id}");
 
     $response->assertStatus(403);
-    $response->assertJson([
-        'message' => 'Unauthorized',
-    ]);
+    $response->assertForbidden()
+        ->assertJson(['message' => 'This action is unauthorized.']);
 });

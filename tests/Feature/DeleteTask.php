@@ -40,9 +40,7 @@ it('prevents non-manager from deleting a task', function () {
     $response = actingAs($this->user)->deleteJson("/api/tasks/{$this->task->id}");
 
     $response->assertStatus(403);
-    $response->assertJson([
-        'message' => 'Unauthorized',
-    ]);
-
+    $response->assertForbidden()
+        ->assertJson(['message' => 'This action is unauthorized.']);
     expect(Task::find($this->task->id))->not->toBeNull();
 });

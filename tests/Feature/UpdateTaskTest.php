@@ -74,5 +74,5 @@ it('prevents non-manager and unassigned user from updating task', function () {
         ]);
 
     $response->assertForbidden()
-        ->assertJson(['message' => 'Unauthorized']);
+        ->assertJson(['message' => 'This action is unauthorized.']);
 });
